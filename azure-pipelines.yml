@@ -44,9 +44,9 @@ steps:
         -var "client_secret=$(ARM_CLIENT_SECRET)"
     displayName: "Desplegar Infraestructura con Terraform"
 
-
-  - script: zip -r app.zip .
-    displayName: 'Empaquetar aplicación'
+  - powershell: |
+      Compress-Archive -Path * -DestinationPath app.zip -Force
+    displayName: "Empaquetar aplicación"
 
   - task: AzureCLI@2
     inputs:
