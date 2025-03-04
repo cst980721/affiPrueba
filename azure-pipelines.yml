@@ -1,19 +1,42 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
-- main
+  - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
+
+variables:
+  azureServiceConnection: 'azure-connection'
+  resourceGroupName: 'AffiGrupoDeRecursos'
+  storageAccountName: 'mistorageaccount123'
+  containerName: 'mi-container'
+  location: 'East US'
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+  - checkout: self
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+  - task: TerraformInstaller@1
+    inputs:
+      terraformVersion: 'latest'
+    displayName: 'Instalar Terraform'
+
+  - script: |
+      terraform init
+      terraform apply -auto-approve
+    workingDirectory: infra
+    displayName: 'Desplegar Infraestructura con Terraform'
+
+  - script: zip -r app.zip .
+    displayName: 'Empaquetar aplicación'
+
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: $(azureServiceConnection)
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az storage blob upload --account-name $(storageAccountName) \
+          --container-name $(containerName) \
+          --name app.zip \
+          --file app.zip \
+          --auth-mode login
+    displayName: 'Subir artefacto a Blob Storage'
