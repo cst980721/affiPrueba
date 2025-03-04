@@ -47,16 +47,17 @@ steps:
   - powershell: |
       Compress-Archive -Path * -DestinationPath app.zip -Force
     displayName: "Empaquetar aplicación"
-
+    
   - task: AzureCLI@2
     inputs:
       azureSubscription: $(azureServiceConnection)
-      scriptType: 'powershell'  # Cambia 'pscore' por 'powershell'
+      scriptType: 'powershell'
       scriptLocation: 'inlineScript'
       inlineScript: |
-        az storage blob upload --account-name $(storageAccountName) `
-          --container-name $(containerName) `
-          --name app.zip `
-          --file app.zip `
+        az storage blob upload ^
+          --account-name $(storageAccountName) ^
+          --container-name $(containerName) ^
+          --name app.zip ^
+          --file app.zip ^
           --auth-mode login
     displayName: "Subir artefacto a Blob Storage"
