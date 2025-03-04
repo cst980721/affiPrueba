@@ -51,12 +51,13 @@ steps:
   - task: AzureCLI@2
     inputs:
       azureSubscription: $(azureServiceConnection)
-      scriptType: 'bash'
+      scriptType: 'pscore'  # Usa PowerShell en lugar de Bash
       scriptLocation: 'inlineScript'
       inlineScript: |
-        az storage blob upload --account-name $(storageAccountName) \
-          --container-name $(containerName) \
-          --name app.zip \
-          --file app.zip \
+        az storage blob upload --account-name $(storageAccountName) `
+          --container-name $(containerName) `
+          --name app.zip `
+          --file app.zip `
           --auth-mode login
-    displayName: 'Subir artefacto a Blob Storage'
+    displayName: "Subir artefacto a Blob Storage"
+
