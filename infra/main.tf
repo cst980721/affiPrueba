@@ -1,10 +1,10 @@
 provider "azurerm" {
   features {}
 
-  subscription_id = getenv("ARM_SUBSCRIPTION_ID")
-  tenant_id       = getenv("ARM_TENANT_ID")
-  client_id       = getenv("ARM_CLIENT_ID")
-  client_secret   = getenv("ARM_CLIENT_SECRET")
+  subscription_id = var.subscription_id
+  tenant_id       = var.tenant_id
+  client_id       = var.client_id
+  client_secret   = var.client_secret
 }
 
 resource "azurerm_resource_group" "rg" {
