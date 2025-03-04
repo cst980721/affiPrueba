@@ -2,22 +2,23 @@ trigger:
   - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  name: 'MyAgentPool'
 
 variables:
-  azureServiceConnection: 'azure-connection'
+  azureServiceConnection: 'AffiConection'
   resourceGroupName: 'AffiGrupoDeRecursos'
   storageAccountName: 'mistorageaccount123'
   containerName: 'mi-container'
   location: 'East US'
 
 steps:
-  - checkout: self
-
-  - task: TerraformInstaller@1
-    inputs:
-      terraformVersion: 'latest'
-    displayName: 'Instalar Terraform'
+  - script: |
+      sudo apt-get update && sudo apt-get install -y wget unzip
+      wget https://releases.hashicorp.com/terraform/1.6.3/terraform_1.6.3_linux_amd64.zip
+      unzip terraform_1.6.3_linux_amd64.zip
+      sudo mv terraform /usr/local/bin/
+      terraform --version
+    displayName: "Instalar Terraform Manualmente"
 
   - script: |
       terraform init
