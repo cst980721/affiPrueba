@@ -47,7 +47,13 @@ steps:
   - powershell: |
       Compress-Archive -Path * -DestinationPath app.zip -Force
     displayName: "Empaquetar aplicación"
-    
+
+  - script: |
+      echo "Active Subscription: $(ARM_SUBSCRIPTION_ID)"
+      echo "Storage Account: $(storageAccountName)"
+      echo "Container Name: $(containerName)"
+    displayName: "Validar Configuración del Pipeline"
+
   - task: AzureCLI@2
     inputs:
       azureSubscription: $(azureServiceConnection)
