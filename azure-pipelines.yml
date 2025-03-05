@@ -53,7 +53,14 @@ steps:
       echo "Storage Account: $(storageAccountName)"
       echo "Container Name: $(containerName)"
     displayName: "Validar Configuración del Pipeline"
-
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: $(azureServiceConnection)
+      scriptType: 'powershell'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az account show --query user
+    displayName: "Mostrar usuario autenticado en Azure"
   - task: AzureCLI@2
     inputs:
       azureSubscription: $(azureServiceConnection)
